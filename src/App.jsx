@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase/supabaseClient'
 import { Loader2 } from 'lucide-react'
-import Layout from './components/Header'
+import Header from './components/Header'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -44,7 +44,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout user={user} />}>
+        <Route path="/" element={<Header user={user} />}>
           {/* Redirect root to dashboard if logged in, otherwise to login */}
           <Route 
             index 

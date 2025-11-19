@@ -7,7 +7,7 @@ const Crud = ({ user }) => {
   const [input, setInput] = useState("");
 
   // CREATE
-  async function addTodo() {
+  const addTodo = async () => {
     if (!input.trim() || !user?.id) return;
 
     const { data, error } = await supabase
@@ -25,10 +25,10 @@ const Crud = ({ user }) => {
     }
 
     setInput("");
-  }
+  };
 
   // UPDATE (no user_id filter)
-  async function toggleComplete(id, current) {
+  const toggleComplete = async (id, current) => {
     setTodos((prev) =>
       prev.map((t) =>
         t.id === id ? { ...t, is_complete: !current } : t
@@ -48,10 +48,10 @@ const Crud = ({ user }) => {
         )
       );
     }
-  }
+  };
 
   // DELETE (no user_id filter)
-  async function deleteTodo(id) {
+  const deleteTodo = async (id) => {
     const backup = todos.find((t) => t.id === id);
 
     setTodos((prev) => prev.filter((t) => t.id !== id));
@@ -64,11 +64,11 @@ const Crud = ({ user }) => {
     if (error) {
       setTodos((prev) => [backup, ...prev]);
     }
-  }
+  };
 
   // FETCH (no user_id filter)
   useEffect(() => {
-    async function loadTodos() {
+    const loadTodos = async () => {
       if (!user?.id) return;
 
       const { data, error } = await supabase
@@ -77,7 +77,7 @@ const Crud = ({ user }) => {
         .order("id", { ascending: false });
 
       if (!error) setTodos(data);
-    }
+    };
 
     loadTodos();
   }, [user?.id]);

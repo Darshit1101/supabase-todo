@@ -6,6 +6,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Google OAuth login
   async function loginWithGoogle() {
     try {
       setLoading(true)
@@ -30,6 +31,7 @@ const Login = () => {
     }
   }
 
+  // GitHub OAuth login
   async function loginWithGitHub() {
     try {
       setLoading(true)

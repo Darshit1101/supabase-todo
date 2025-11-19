@@ -2,7 +2,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase/supabaseClient';
 import { LogOut, User, Home } from 'lucide-react';
 
-const Layout = ({ user }) => {
+const Header = ({ user }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -51,4 +51,4 @@ const Layout = ({ user }) => {
   );
 };
 
-export default Layout;
+export default Header;

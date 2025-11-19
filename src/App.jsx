@@ -1,9 +1,12 @@
 import './App.css'
-import Crud from './components/crud'
-import Login from './components/loginButton'
 import { useEffect, useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase/supabaseClient'
 import { Loader2 } from 'lucide-react'
+import Layout from './components/Layout'
+import LoginPage from './pages/LoginPage'
+import Dashboard from './pages/Dashboard'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -39,9 +42,38 @@ function App() {
   }
 
   return (
-    <>
-      {user ? <Crud user={user} /> : <Login />}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout user={user} />}>
+          {/* Redirect root to dashboard if logged in, otherwise to login */}
+          <Route 
+            index 
+            element={
+              user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+            } 
+          />
+          
+          {/* Login page - accessible only when not logged in */}
+          <Route 
+            path="login" 
+            element={<LoginPage user={user} />} 
+          />
+          
+          {/* Protected routes - accessible only when logged in */}
+          <Route 
+            path="dashboard" 
+            element={
+              <ProtectedRoute user={user}>
+                <Dashboard user={user} />
+              </ProtectedRoute>
+            } 
+          />
+        </Route>
+        
+        {/* Catch all route - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   )
 }
 

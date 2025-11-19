@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase/supabaseClient";
-import { Plus, Trash2, ListTodo, CheckCircle2, Circle, LogOut, User } from "lucide-react";
+import { Plus, Trash2, ListTodo, CheckCircle2, Circle } from "lucide-react";
 
 const Crud = ({ user }) => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
-
-  // Logout function
-  async function handleLogout() {
-    await supabase.auth.signOut();
-  }
 
   // CREATE
   async function addTodo() {
@@ -106,34 +101,6 @@ const Crud = ({ user }) => {
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                {user?.user_metadata?.avatar_url ? (
-                  <img 
-                    src={user.user_metadata.avatar_url} 
-                    alt="Profile" 
-                    className="w-8 h-8 rounded-full"
-                  />
-                ) : (
-                  <User className="w-8 h-8 text-gray-400" />
-                )}
-                <div>
-                  <p className="text-sm font-medium text-gray-800">
-                    {user?.user_metadata?.full_name || user?.email || 'User'}
-                  </p>
-                  <p className="text-xs text-gray-500">{user?.email}</p>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-red-600 transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
-          </div>
           <div className="text-center">
             <h1 className="text-3xl font-semibold text-gray-800 mb-2">
               My Todo List

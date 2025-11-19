@@ -14,7 +14,7 @@ const Crud = ({ user }) => {
       .from("todos")
       .insert([{ title: input, user_id: user.id }])
       .select();
-    console.log(data, '=====data');
+
     if (error) {
       alert(error.message);
       return;
@@ -27,7 +27,7 @@ const Crud = ({ user }) => {
     setInput("");
   };
 
-  // UPDATE (no user_id filter)
+  // UPDATE (safe — no user_id needed because RLS will block others)
   const toggleComplete = async (id, current) => {
     setTodos((prev) =>
       prev.map((t) =>
@@ -41,7 +41,6 @@ const Crud = ({ user }) => {
       .eq("id", id);
 
     if (error) {
-      // rollback on error
       setTodos((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, is_complete: current } : t
@@ -50,7 +49,7 @@ const Crud = ({ user }) => {
     }
   };
 
-  // DELETE (no user_id filter)
+  // DELETE
   const deleteTodo = async (id) => {
     const backup = todos.find((t) => t.id === id);
 
@@ -66,7 +65,7 @@ const Crud = ({ user }) => {
     }
   };
 
-  // FETCH (no user_id filter)
+  // FETCH only current user's todos
   useEffect(() => {
     const loadTodos = async () => {
       if (!user?.id) return;
@@ -74,6 +73,7 @@ const Crud = ({ user }) => {
       const { data, error } = await supabase
         .from("todos")
         .select("*")
+        .eq("user_id", user.id)  // important: filter by current user
         .order("id", { ascending: false });
 
       if (!error) setTodos(data);
@@ -85,23 +85,24 @@ const Crud = ({ user }) => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-lg mx-auto">
+
         {/* Header */}
-        <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border">
-          <div className="text-center">
-            <h1 className="text-3xl font-semibold text-gray-800 mb-2">
-              My Todo List
-            </h1>
-            <p className="text-gray-600">Stay organized and productive</p>
-          </div>
+        <div className="bg-white rounded-lg p-1 mb-6 shadow-sm border">
+          <h1 className="text-3xl font-semibold text-gray-800 text-center">
+            My Todo List
+          </h1>
+          <p className="text-gray-600 text-center">
+            Welcome, {user.user_metadata.full_name}
+          </p>
         </div>
 
-        {/* Add Form */}
-        <div className="bg-white rounded-lg p-4 mb-6 shadow-sm border">
+        {/* Add Todo */}
+        <div className="bg-white rounded-lg p-1 mb-6 shadow-sm border">
           <div className="flex gap-3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Add a new task..."
+              placeholder="Add new task..."
               className="flex-1 px-3 py-2 border rounded-md"
               onKeyPress={(e) => e.key === "Enter" && addTodo()}
             />
@@ -109,45 +110,32 @@ const Crud = ({ user }) => {
               onClick={addTodo}
               className="px-4 py-2 bg-blue-500 text-white rounded-md flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
-              Add
+              <Plus className="w-4 h-4" /> Add
             </button>
           </div>
         </div>
 
         {/* Todo List */}
-        <div className="space-y-2">
-          {todos.length === 0 ? (
-            <div className="text-center py-8">
-              <ListTodo className="w-16 h-16 mx-auto mb-3 text-gray-300" />
-              <p className="text-gray-500">No tasks yet</p>
-            </div>
-          ) : (
-            todos.map((todo) => (
-              <div
-                key={todo.id}
-                className="bg-white rounded-lg p-3 border shadow-sm"
-              >
+        {todos.length === 0 ? (
+          <div className="text-center py-8">
+            <ListTodo className="w-16 h-16 mx-auto mb-3 text-gray-300" />
+            <p className="text-gray-500">No tasks yet</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {todos.map((todo) => (
+              <div key={todo.id} className="bg-white rounded-lg p-3 border shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 flex-1">
-                    <button
-                      onClick={() =>
-                        toggleComplete(todo.id, todo.is_complete)
-                      }
-                    >
+                    <button onClick={() => toggleComplete(todo.id, todo.is_complete)}>
                       {todo.is_complete ? (
                         <CheckCircle2 className="w-5 h-5 text-green-500" />
                       ) : (
                         <Circle className="w-5 h-5" />
                       )}
                     </button>
-                    <span
-                      className={
-                        todo.is_complete
-                          ? "line-through text-gray-400"
-                          : "text-gray-800"
-                      }
-                    >
+
+                    <span className={todo.is_complete ? "line-through text-gray-400" : "text-gray-800"}>
                       {todo.title}
                     </span>
                   </div>
@@ -156,29 +144,14 @@ const Crud = ({ user }) => {
                     onClick={() => deleteTodo(todo.id)}
                     className="px-3 py-1 text-red-500 hover:text-red-700 flex items-center gap-1"
                   >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
+                    <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 </div>
               </div>
-            ))
-          )}
-        </div>
-
-        {/* Footer */}
-        {todos.length > 0 && (
-          <div className="mt-6 bg-white rounded-lg p-3 border shadow-sm">
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Total: {todos.length}</span>
-              <span>
-                Completed: {todos.filter((t) => t.is_complete).length}
-              </span>
-              <span>
-                Remaining: {todos.filter((t) => !t.is_complete).length}
-              </span>
-            </div>
+            ))}
           </div>
         )}
+
       </div>
     </div>
   );

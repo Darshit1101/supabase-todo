@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase/supabaseClient'
 import { Loader2 } from 'lucide-react'
@@ -30,6 +30,25 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Sync user profile to profiles table when user logs in
+  const syncedRef = useRef(false);
+
+  useEffect(() => {
+    if (!user || syncedRef.current) return;
+    syncedRef.current = true;
+
+    const syncProfile = async () => {
+      await supabase.from("profiles").upsert({
+        id: user.id,
+        full_name: user.user_metadata.full_name,
+        email: user.email,
+        avatar_url: user.user_metadata.avatar_url
+      });
+    };
+
+    syncProfile();
+  }, [user]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -46,30 +65,30 @@ function App() {
       <Routes>
         <Route path="/" element={<Header user={user} />}>
           {/* Redirect root to dashboard if logged in, otherwise to login */}
-          <Route 
-            index 
+          <Route
+            index
             element={
               user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
-            } 
+            }
           />
-          
+
           {/* Login page - accessible only when not logged in */}
-          <Route 
-            path="login" 
-            element={<LoginPage user={user} />} 
+          <Route
+            path="login"
+            element={<LoginPage user={user} />}
           />
-          
+
           {/* Protected routes - accessible only when logged in */}
-          <Route 
-            path="dashboard" 
+          <Route
+            path="dashboard"
             element={
               <ProtectedRoute user={user}>
                 <Dashboard user={user} />
               </ProtectedRoute>
-            } 
+            }
           />
         </Route>
-        
+
         {/* Catch all route - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

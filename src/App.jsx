@@ -7,6 +7,7 @@ import Header from './components/Header'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
 import Profile from './components/Profile'
+import UpdatePassword from './components/UpdatePassword'
 import ProtectedLayout from './components/ProtectedRoute'
 
 function App() {
@@ -23,8 +24,15 @@ function App() {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth event:', event, session?.user?.email)
         setUser(session?.user ?? null)
         setLoading(false)
+
+        // Handle password recovery
+        if (event === 'PASSWORD_RECOVERY') {
+          // User clicked reset link, redirect to reset password page
+          window.location.href = '/reset-password'
+        }
       }
     )
 
@@ -83,14 +91,17 @@ function App() {
           {/* Public route */}
           <Route path="login" element={<LoginPage user={user} />} />
 
-          {/* ⭐ Protected Layout Start */}
+          {/* Password Reset Route - Public but requires session from email link */}
+          <Route path="reset-password" element={<UpdatePassword />} />
+
+          {/* Protected Layout Start */}
           <Route element={<ProtectedLayout user={user} />}>
 
             <Route path="dashboard" element={<Dashboard user={user} />} />
             <Route path="profile" element={<Profile user={user} />} />
 
           </Route>
-          {/* ⭐ Protected Layout End */}
+          {/* Protected Layout End */}
 
         </Route>
 

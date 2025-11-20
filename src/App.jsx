@@ -39,11 +39,15 @@ function App() {
     syncedRef.current = true;
 
     const syncProfile = async () => {
+      // For OAuth users, use user_metadata; for email/password users, use the email and any user_metadata
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || 'User';
+      const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
+
       await supabase.from("profiles").upsert({
         id: user.id,
-        full_name: user.user_metadata.full_name,
+        full_name: fullName,
         email: user.email,
-        avatar_url: user.user_metadata.avatar_url
+        avatar_url: avatarUrl
       });
     };
 

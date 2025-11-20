@@ -7,7 +7,7 @@ const OAuthLogin = () => {
     const [error, setError] = useState(null)
 
     // Google OAuth login
-    async function loginWithGoogle() {
+    const loginWithGoogle = async () => {
         try {
             setLoading(true)
             setError(null)
@@ -32,7 +32,7 @@ const OAuthLogin = () => {
     }
 
     // GitHub OAuth login
-    async function loginWithGitHub() {
+    const loginWithGitHub = async () => {
         try {
             setLoading(true)
             setError(null)
@@ -57,7 +57,7 @@ const OAuthLogin = () => {
     }
 
     // linkedin OAuth login
-    async function loginWithLinkedIn() {
+    const loginWithLinkedIn = async () => {
         try {
             setLoading(true)
             setError(null)

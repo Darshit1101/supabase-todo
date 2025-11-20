@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { supabase } from '../supabase/supabaseClient'
+import { supabase } from '../../supabase/supabaseClient'
 import { Loader2 } from 'lucide-react'
 
 const OAuthLogin = () => {

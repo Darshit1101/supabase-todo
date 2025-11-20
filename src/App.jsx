@@ -8,7 +8,7 @@ import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import UpdatePassword from './pages/UpdatePassword'
-import ProtectedLayout from './components/ProtectedRoute'
+import ProtectedLayout from './routes/ProtectedRoute'
 
 function App() {
   const [user, setUser] = useState(null)

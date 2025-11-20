@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import OAuthLogin from '../components/OAuthLogin';
+import OAuthLogin from '../components/Login/OAuthLogin';
 import AuthForms from '../components/Login/AuthForms';
 import { memo } from 'react';
 

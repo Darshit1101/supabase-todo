@@ -14,7 +14,8 @@ const Profile = ({ user }) => {
 
                 {/* Profile Image */}
                 <img
-                    src={avatar || "https://via.placeholder.com/100"}
+                    src={avatar}
+                    referrerPolicy="no-referrer"
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover border"
                 />

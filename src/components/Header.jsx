@@ -16,6 +16,8 @@ const Header = ({ user }) => {
         <nav className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
+              
+              {/* Left Section */}
               <div className="flex items-center">
                 <Link 
                   to="/dashboard" 
@@ -25,12 +27,26 @@ const Header = ({ user }) => {
                   Todo App
                 </Link>
               </div>
-              
-              <div className="flex items-center gap-4">
+
+              {/* Right Section */}
+              <div className="flex items-center gap-6">
+
+                {/* My Profile Link */}
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                >
+                  <User className="h-4 w-4" />
+                  My Profile
+                </Link>
+
+                {/* User Email */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <User className="h-4 w-4" />
                   {user.email}
                 </div>
+
+                {/* Logout */}
                 <button 
                   onClick={handleLogout}
                   className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors"

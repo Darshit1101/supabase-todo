@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import Crud from '../components/crud';
+import { memo } from 'react';
 
 const Dashboard = ({ user }) => {
   const navigate = useNavigate();
@@ -13,4 +14,4 @@ const Dashboard = ({ user }) => {
   return <Crud user={user} />;
 };
 
-export default Dashboard;
+export default memo(Dashboard);

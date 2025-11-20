@@ -1,12 +1,13 @@
 import './App.css'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase/supabaseClient'
 import { Loader2 } from 'lucide-react'
 import Header from './components/Header'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
-import ProtectedRoute from './components/ProtectedRoute'
+import Profile from './components/Profile'
+import ProtectedLayout from './components/ProtectedRoute'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -63,8 +64,11 @@ function App() {
   return (
     <Router>
       <Routes>
+
+        {/* Header wrapper */}
         <Route path="/" element={<Header user={user} />}>
-          {/* Redirect root to dashboard if logged in, otherwise to login */}
+
+          {/* Redirect root */}
           <Route
             index
             element={
@@ -72,28 +76,26 @@ function App() {
             }
           />
 
-          {/* Login page - accessible only when not logged in */}
-          <Route
-            path="login"
-            element={<LoginPage user={user} />}
-          />
+          {/* Public route */}
+          <Route path="login" element={<LoginPage user={user} />} />
 
-          {/* Protected routes - accessible only when logged in */}
-          <Route
-            path="dashboard"
-            element={
-              <ProtectedRoute user={user}>
-                <Dashboard user={user} />
-              </ProtectedRoute>
-            }
-          />
+          {/* ⭐ Protected Layout Start */}
+          <Route element={<ProtectedLayout user={user} />}>
+
+            <Route path="dashboard" element={<Dashboard user={user} />} />
+            <Route path="profile" element={<Profile user={user} />} />
+
+          </Route>
+          {/* ⭐ Protected Layout End */}
+
         </Route>
 
-        {/* Catch all route - redirect to home */}
+        {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
-  )
+  );
+
 }
 
-export default App
+export default memo(App)

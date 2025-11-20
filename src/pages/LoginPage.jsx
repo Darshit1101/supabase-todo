@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Login from '../components/loginButton';
+import { memo } from 'react';
 
 const LoginPage = ({ user }) => {
   const navigate = useNavigate();
@@ -20,4 +21,4 @@ const LoginPage = ({ user }) => {
   return <Login />;
 };
 
-export default LoginPage;
+export default memo(LoginPage);

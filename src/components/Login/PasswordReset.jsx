@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { supabase } from '../supabase/supabaseClient'
+import { supabase } from '../../supabase/supabaseClient'
 import { Loader2, Mail, ArrowLeft } from 'lucide-react'
 
 const PasswordReset = ({ onBackToLogin }) => {

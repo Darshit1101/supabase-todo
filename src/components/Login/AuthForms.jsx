@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { supabase } from '../../supabase/supabaseClient'
 import { Loader2, Eye, EyeOff, User, Mail, Lock } from 'lucide-react'
-import PasswordReset from '../PasswordReset'
-import EmailConfirmationInfo from '../EmailConfirmationInfo'
+import PasswordReset from './PasswordReset'
+import EmailConfirmationInfo from './EmailConfirmationInfo'
 
 const AuthForms = () => {
     const [isLogin, setIsLogin] = useState(true)

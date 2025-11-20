@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Crud from '../components/crud';
+import Crud from '../components/Todo/crud';
 import { memo } from 'react';
 
 const Dashboard = ({ user }) => {

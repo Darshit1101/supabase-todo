@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
 import { Plus, Trash2, ListTodo, CheckCircle2, Circle } from "lucide-react";
 
 const Crud = ({ user }) => {

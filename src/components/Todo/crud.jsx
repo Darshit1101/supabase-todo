@@ -108,7 +108,7 @@ const Crud = ({ user }) => {
             />
             <button
               onClick={addTodo}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md flex items-center gap-2"
+              className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md flex items-center gap-2"
             >
               <Plus className="w-4 h-4" /> Add
             </button>
@@ -142,7 +142,7 @@ const Crud = ({ user }) => {
 
                   <button
                     onClick={() => deleteTodo(todo.id)}
-                    className="px-3 py-1 text-red-500 hover:text-red-700 flex items-center gap-1"
+                    className="cursor-pointer px-3 py-1 text-red-500 hover:text-red-700 flex items-center gap-1"
                   >
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>

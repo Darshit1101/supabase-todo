@@ -3,10 +3,13 @@ import { supabase } from '../../supabase/supabaseClient'
 import { Loader2, Eye, EyeOff, User, Mail, Lock } from 'lucide-react'
 import PasswordReset from './PasswordReset'
 import EmailConfirmationInfo from './EmailConfirmationInfo'
+import AccountLinking from './AccountLinking'
 
 const AuthForms = () => {
     const [isLogin, setIsLogin] = useState(true)
     const [showPasswordReset, setShowPasswordReset] = useState(false)
+    const [showAccountLinking, setShowAccountLinking] = useState(false)
+    const [oauthEmail, setOauthEmail] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
@@ -27,11 +30,13 @@ const AuthForms = () => {
             ...prev,
             [name]: value
         }))
-        // Clear errors and unconfirmed email when user starts typing
+        // Clear errors and states when user starts typing
         if (error) setError(null)
         if (success) setSuccess(null)
         if (unconfirmedEmail) setUnconfirmedEmail(null)
         if (showEmailInfo) setShowEmailInfo(false)
+        if (showAccountLinking) setShowAccountLinking(false)
+        if (oauthEmail) setOauthEmail(null)
     }
 
     // Register function
@@ -117,7 +122,13 @@ const AuthForms = () => {
                 setError('Please check your email and click the confirmation link to verify your account before logging in. Check your spam folder if you don\'t see the email.')
                 setUnconfirmedEmail(formData.email) // Store email for resend option
             } else if (error.message === 'Invalid login credentials') {
-                setError('Invalid email or password. Please check your credentials and try again.')
+                // Check if this might be an OAuth account
+                setError(
+                    `Invalid email or password. If you previously signed in with Google or GitHub using this email, please use that method to login.`
+                )
+                // Show account linking option for invalid credentials
+                setOauthEmail(formData.email)
+                setShowAccountLinking(true)
             } else {
                 setError(error.message)
             }
@@ -159,6 +170,15 @@ const AuthForms = () => {
         <div className="w-full max-w-md">
             {showPasswordReset ? (
                 <PasswordReset onBackToLogin={() => setShowPasswordReset(false)} />
+            ) : showAccountLinking && oauthEmail ? (
+                <AccountLinking
+                    email={oauthEmail}
+                    onClose={() => {
+                        setShowAccountLinking(false)
+                        setOauthEmail(null)
+                        setError(null)
+                    }}
+                />
             ) : (
                 <>
                     {/* Toggle Buttons */}
@@ -171,6 +191,8 @@ const AuthForms = () => {
                                 setSuccess(null)
                                 setUnconfirmedEmail(null)
                                 setShowEmailInfo(false)
+                                setShowAccountLinking(false)
+                                setOauthEmail(null)
                                 setFormData({ fullName: '', email: '', password: '' })
                             }}
                             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${isLogin
@@ -188,6 +210,8 @@ const AuthForms = () => {
                                 setSuccess(null)
                                 setUnconfirmedEmail(null)
                                 setShowEmailInfo(false)
+                                setShowAccountLinking(false)
+                                setOauthEmail(null)
                                 setFormData({ fullName: '', email: '', password: '' })
                             }}
                             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${!isLogin
